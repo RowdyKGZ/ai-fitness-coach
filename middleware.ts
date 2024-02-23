@@ -2,7 +2,14 @@ import { authMiddleware } from "@clerk/nextjs";
 
 export default authMiddleware({
   // Routes that can be accessed while signed out
-  publicRoutes: ["/", "/profile", "/api/assistant/create"],
+  publicRoutes: [
+    "/",
+    "/profile",
+    "/api/assistant/create",
+    "/api/thread",
+    "/api/message/create",
+    "/api/message/list",
+  ],
 });
 
 export const config = {

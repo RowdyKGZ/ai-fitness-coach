@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
 export async function POST() {
-  const openai = new OpenAI({ apiKey: process.env.OPEN_AI_KEY });
+  const openai = new OpenAI();
 
   try {
     const assistant = await openai.beta.assistants.create({
