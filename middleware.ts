@@ -7,8 +7,10 @@ export default authMiddleware({
     "/profile",
     "/api/assistant/create",
     "/api/thread",
-    "/api/message/create",
     "/api/message/list",
+    "/api/message/create",
+    "/api/run/create",
+    "/api/run/retrieve",
   ],
 });
 
