@@ -1,16 +1,19 @@
 "use client";
+import axios from "axios";
+import { useAtom } from "jotai";
+import { userThreadAtom } from "@/atom";
 import { useEffect, useState } from "react";
 import { UserThread } from "@prisma/client";
 
 import { Nvabar } from "@/components/nvabar";
-import axios from "axios";
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [userThread, setUserThread] = useState<UserThread | null>(null);
+  // const [userThread, setUserThread] = useState<UserThread | null>(null);
+  const [userThread, setUserThread] = useAtom(userThreadAtom);
 
   useEffect(() => {
     async function getUserThread() {
@@ -35,7 +38,7 @@ export default function RootLayout({
     }
 
     getUserThread();
-  }, []);
+  }, [setUserThread]);
 
   console.log("userthread", userThread);
 
