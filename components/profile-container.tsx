@@ -63,7 +63,7 @@ export const PprofileContainer = ({ challengePreferences }: Props) => {
         message?: string;
       }>("/api/challenge-preferences", {
         id: challengePreferences.id,
-        challengId: selectedDifficulty,
+        challengeId: selectedDifficulty,
         sendNotifications,
       });
 
