@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Assistant, UserThread } from "@prisma/client";
 
 import { Nvabar } from "@/components/nvabar";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function RootLayout({
   children,
@@ -74,6 +74,7 @@ export default function RootLayout({
     <div className="flex flex-col w-full h-full">
       <Nvabar />
       {children}
+      <Toaster />
     </div>
   );
 }
