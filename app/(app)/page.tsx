@@ -8,7 +8,7 @@ import { toast } from "react-hot-toast";
 import { assistantAtom, userThreadAtom } from "@/atom";
 import { Run } from "openai/resources/beta/threads/runs/runs.mjs";
 
-const POLLING_FREQUENCY_MS = 10000;
+const POLLING_FREQUENCY_MS = 1000;
 
 const ChatPage = () => {
   const [userThread] = useAtom(userThreadAtom);
@@ -64,12 +64,12 @@ const ChatPage = () => {
     }
   }, [userThread]);
 
-  // useEffect(() => {
-  //   const intervalId = setInterval(fetchMessages, POLLING_FREQUENCY_MS);
+  useEffect(() => {
+    const intervalId = setInterval(fetchMessages, POLLING_FREQUENCY_MS);
 
-  //   // Clean up on unmount
-  //   return () => clearInterval(intervalId);
-  // }, [fetchMessages]);
+    // Clean up on unmount
+    return () => clearInterval(intervalId);
+  }, [fetchMessages]);
 
   const startRun = async (
     threadId: string,
