@@ -7,6 +7,7 @@ import { Assistant, UserThread } from "@prisma/client";
 
 import { Nvabar } from "@/components/nvabar";
 import toast, { Toaster } from "react-hot-toast";
+import useServiceWorker from "@/hooks/useServiceWorker";
 
 export default function RootLayout({
   children,
@@ -16,6 +17,8 @@ export default function RootLayout({
   // const [userThread, setUserThread] = useState<UserThread | null>(null);
   const [, setUserThread] = useAtom(userThreadAtom);
   const [assistant, setAssistant] = useAtom(assistantAtom);
+
+  useServiceWorker();
 
   useEffect(() => {
     if (assistant) return;

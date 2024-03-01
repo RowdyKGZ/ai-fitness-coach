@@ -8,7 +8,7 @@ import { toast } from "react-hot-toast";
 import { assistantAtom, userThreadAtom } from "@/atom";
 import { Run } from "openai/resources/beta/threads/runs/runs.mjs";
 
-const POLLING_FREQUENCY_MS = 1000;
+const POLLING_FREQUENCY_MS = 10000;
 
 const ChatPage = () => {
   const [userThread] = useAtom(userThreadAtom);
