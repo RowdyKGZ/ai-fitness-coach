@@ -8,6 +8,7 @@ import { Assistant, UserThread } from "@prisma/client";
 import { Nvabar } from "@/components/nvabar";
 import toast, { Toaster } from "react-hot-toast";
 import useServiceWorker from "@/hooks/useServiceWorker";
+import { NotificationModal } from "@/components/notification-modal";
 
 export default function RootLayout({
   children,
@@ -15,10 +16,46 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   // const [userThread, setUserThread] = useState<UserThread | null>(null);
+
+  // Atom state
   const [, setUserThread] = useAtom(userThreadAtom);
   const [assistant, setAssistant] = useAtom(assistantAtom);
 
+  // State
+  const [isNotificationsModalVisible, setIsNotificationsModalVisible] =
+    useState(false);
+
+  // hook
   useServiceWorker();
+
+  const handleNotificationModalClose = (didConstent: boolean) => {
+    setIsNotificationsModalVisible(false);
+
+    if (didConstent) {
+      toast.success("You will now receive notifications");
+    }
+  };
+
+  const saveSubscription = async () => {
+    const serviceWorkerRegistration = await navigator.serviceWorker.ready;
+    const subscription = await serviceWorkerRegistration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+    });
+
+    try {
+      const response = await axios.post("/api/subscription", { subscription });
+
+      if (!response.data.success) {
+        console.error(response.data.message ?? "Unknow error");
+        toast.error("Failed to save subscription");
+        return;
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to save subscription");
+    }
+  };
 
   useEffect(() => {
     if (assistant) return;
@@ -73,10 +110,23 @@ export default function RootLayout({
     getUserThread();
   }, [setUserThread]);
 
+  useEffect(() => {
+    if ("Notification" in window) {
+      setIsNotificationsModalVisible(Notification.permission === "default");
+      console.log("Notification permission:", Notification.permission);
+    }
+  }, []);
+
   return (
     <div className="flex flex-col w-full h-full">
       <Nvabar />
       {children}
+      {isNotificationsModalVisible && (
+        <NotificationModal
+          saveSubscription={saveSubscription}
+          onRequestClose={handleNotificationModalClose}
+        />
+      )}
       <Toaster />
     </div>
   );
