@@ -2,7 +2,7 @@
 import axios from "axios";
 import { useAtom } from "jotai";
 import { assistantAtom, userThreadAtom } from "@/atom";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Assistant, UserThread } from "@prisma/client";
 
 import { Nvabar } from "@/components/nvabar";
@@ -36,7 +36,7 @@ export default function RootLayout({
     }
   };
 
-  const saveSubscription = async () => {
+  const saveSubscription = useCallback(async () => {
     const serviceWorkerRegistration = await navigator.serviceWorker.ready;
     const subscription = await serviceWorkerRegistration.pushManager.subscribe({
       userVisibleOnly: true,
@@ -55,7 +55,7 @@ export default function RootLayout({
       console.error(error);
       toast.error("Failed to save subscription");
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (assistant) return;
@@ -114,6 +114,14 @@ export default function RootLayout({
     if ("Notification" in window) {
       setIsNotificationsModalVisible(Notification.permission === "default");
       console.log("Notification permission:", Notification.permission);
+    }
+  }, []);
+
+  useEffect(() => {
+    if ("Notification" in window && "serviceWorker" in navigator) {
+      if (Notification.permission === "granted") {
+        saveSubscription();
+      }
     }
   }, []);
 
